@@ -2,7 +2,7 @@
 import chai from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
-import irc from 'irc';
+import irc from 'irc-upd';
 import discord from 'discord.js';
 import logger from 'winston';
 import Bot from '../lib/bot';
@@ -33,10 +33,10 @@ describe('Bot Events', function () {
     this.debugSpy = sandbox.stub(logger, 'debug');
     this.warnSpy = sandbox.stub(logger, 'warn');
     this.errorSpy = sandbox.stub(logger, 'error');
-    this.sendMessageStub = sandbox.stub();
+    this.sendStub = sandbox.stub();
     this.getUserStub = sandbox.stub();
     irc.Client = ClientStub;
-    discord.Client = createDiscordStub(this.sendMessageStub, this.getUserStub);
+    discord.Client = createDiscordStub(this.sendStub, this.getUserStub);
     ClientStub.prototype.send = sandbox.stub();
     ClientStub.prototype.join = sandbox.stub();
     this.bot = createBot();
@@ -158,7 +158,9 @@ describe('Bot Events', function () {
     bot.channelUsers.should.be.an('object');
     const channel = '#channel';
     // nick => '' means the user is not a special user
-    const nicks = { [bot.nickname]: '', user: '', user2: '@', user3: '+' };
+    const nicks = {
+      [bot.nickname]: '', user: '', user2: '@', user3: '+'
+    };
     bot.ircClient.emit('names', channel, nicks);
     const channelNicks = new Set([bot.nickname, 'user', 'user2', 'user3']);
     bot.channelUsers.should.deep.equal({ '#channel': channelNicks });
@@ -303,6 +305,18 @@ describe('Bot Events', function () {
     this.warnSpy.should.have.been.calledTwice;
     this.warnSpy.getCall(0).args.should.deep.equal([`No channelUsers found for ${channel} when user1 parted.`]);
     this.warnSpy.getCall(1).args.should.deep.equal([`No channelUsers found for ${channel} when user2 quit, ignoring.`]);
+  });
+
+  it('should not crash if it uses a different name from config', function () {
+    // this can happen when a user with the same name is already connected
+    const bot = createBot({ ...config, nickname: 'testbot' });
+    bot.connect();
+    const newName = 'testbot1';
+    bot.ircClient.nick = newName;
+    function wrap() {
+      bot.ircClient.emit('join', '#channel', newName);
+    }
+    (wrap).should.not.throw;
   });
 
   it('should not listen to discord debug messages in production', function () {
