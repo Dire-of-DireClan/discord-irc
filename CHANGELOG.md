@@ -1,6 +1,60 @@
 # Changelog
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.9.0-alpha] - 2020-08-08
+Pre-release of a (relatively large) upcoming change to use discord.js v12! There were a lot of breaking changes in the upstream library, including removal of support for Node <12, which is what prompts me to make this into a pre-release rather than storming ahead to release it directly. If nobody reports bugs on this soon, and I don't spot any, I'll promote this into a full release!
+
+**Please do test this out, if you're happy to risk breakages and report these bugs to me!**
+
+### Changed
+* Upgrade discord.js to 12.2.0, which changes a lot of how the bot works behind the scenes, and starts preparing us for upcoming Discord API changes - [#555](https://github.com/reactiflux/discord-irc/pull/555)
+* Add support for Node 14 ([#549](https://github.com/reactiflux/discord-irc/pull/549)); drop support for Node 6, 8 and 10 ([#550](https://github.com/reactiflux/discord-irc/pull/550)).
+
+### Fixed
+* A bunch of vulnerabilities listed in `npm audit` are now gone - [#544](https://github.com/reactiflux/discord-irc/pull/544), [#548](https://github.com/reactiflux/discord-irc/pull/548), [#551](https://github.com/reactiflux/discord-irc/pull/551), [#552](https://github.com/reactiflux/discord-irc/pull/552), [#553](https://github.com/reactiflux/discord-irc/pull/553)
+* Log messages now typically take up one line again (fixing a relatively long-standing bug, at this point – oops!) - [#554](https://github.com/reactiflux/discord-irc/pull/554)
+
+## [2.8.1] - 2020-03-16
+### Fixed
+* Large avatars failed to display when bridging through webhooks - (thanks to [Miosame](https://github.com/reactiflux/discord-irc/pull/511), follow up in [#530](https://github.com/reactiflux/discord-irc/pull/530))
+* Update acorn to 7.1.1 - [#534](https://github.com/reactiflux/discord-irc/pull/534)
+* Remove code coverage instrumentation from `dist/` files - [#536](https://github.com/reactiflux/discord-irc/pull/536)
+
+## [2.8.0] - 2019-12-14
+### Added
+* `format.webhookAvatarURL`, to customize the unrecognized user webhook avatar (thanks to [Geo1088](https://github.com/reactiflux/discord-irc/pull/419))
+* `parallelPingFix`, disabled by default, to prevent users of both Discord and IRC getting pings whenever their messages are mirrored to IRC (thanks to [qaisjp](https://github.com/reactiflux/discord-irc/pull/243) originally, follow up in [#502](https://github.com/reactiflux/discord-irc/pull/502) and [#520](https://github.com/reactiflux/discord-irc/pull/520))
+* `ignoreUsers.discordIds`, to ignore specific Discord users through the bridge by ID instead of name (thanks to [nsavch](https://github.com/reactiflux/discord-irc/pull/508))
+* A basic Docker image, found at [discordirc/discord-irc](https://hub.docker.com/r/discordirc/discord-irc)! This may not be often updated with the release tags we publish on GitHub, but it should contain a `latest` tag in addition to whichever Git hash is available on master (thanks to [gdude2002](https://github.com/reactiflux/discord-irc/pull/421), follow up in [#498](https://github.com/reactiflux/discord-irc/pull/498))
+
+### Changed
+* Add support for Node 13, drop testing for Node 6 - [#521](https://github.com/reactiflux/discord-irc/pull/521)
+
+### Fixed
+* Upgrade various dependencies: babel, commander, coveralls, discord.js, eslint, mocha, simple-markdown, sinon, sinon-chai - [#488](https://github.com/reactiflux/discord-irc/pull/488), [#503](https://github.com/reactiflux/discord-irc/pull/503), [#522](https://github.com/reactiflux/discord-irc/pull/522), [#523](https://github.com/reactiflux/discord-irc/pull/523), [#524](https://github.com/reactiflux/discord-irc/pull/524/files), [#525](https://github.com/reactiflux/discord-irc/pull/525)
+
+## [2.7.2] - 2019-08-08
+### Fixed
+* Defer to discord permissions for allowing `@everyone` and `@here` in webhook messages - [#497](https://github.com/reactiflux/discord-irc/pull/497)
+* Support Node 10 and 12 - [#499](https://github.com/reactiflux/discord-irc/pull/499)
+* Upgrade dependencies
+* Tests: Fix lint config deprecation - [#500](https://github.com/reactiflux/discord-irc/pull/500)
+* Tests: Ensure all tests are run in dev environment - [#501](https://github.com/reactiflux/discord-irc/pull/501)
+
+## [2.7.1] - 2019-06-15
+### Changed
+* Upgraded dependencies.
+
+## [2.7.0] - 2019-04-02
+### Changed
+* Convert channel mentions to codified mentions (thanks to [Throne3d](https://github.com/reactiflux/discord-irc/pull/476)).
+* Match IRC style mentions at the beginning of message (thanks to [rdb](https://github.com/reactiflux/discord-irc/pull/470)).
+* Upgraded dependencies.
+
+## [2.6.2] - 2018-09-19
+### Changed
+* Upgraded dependencies.
+
 ## [2.6.1] - 2018-05-11
 ### Changed
 * Upgraded dependencies.

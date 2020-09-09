@@ -6,7 +6,8 @@
 ![discord-irc](http://i.imgur.com/oI6iCrf.gif)
 
 ## Installation and usage
-**Note**: discord-irc requires Node.js version 6 or newer, as it depends on [discord.js](https://github.com/hydrabolt/discord.js).
+**Note**: discord-irc requires Node.js version 12 or newer, as it depends on [discord.js](https://github.com/hydrabolt/discord.js).
+Future versions may require newer Node.js versions, though we should support active releases.
 
 Before you can run discord-irc you need to create a configuration file by
 following the instructions [here](https://github.com/reactiflux/discord-irc#configuration).
@@ -36,6 +37,24 @@ import discordIRC from 'discord-irc';
 import config from './config.json';
 discordIRC(config);
 ```
+
+## Docker
+As an alternative to running discord-irc directly on your machine, we provide a [Docker container image](https://hub.docker.com/r/discordirc/discord-irc).
+After creating a configuration file, you can fetch the image from Docker Hub and run it with the following command:
+
+```bash
+docker run -v /path/to/config:/config/config.json discordirc/discord-irc
+```
+
+If you've checked out the repository already, you can build the Docker image locally and run that instead:
+
+```bash
+docker build -t discord-irc .
+docker run -v /path/to/config:/config/config.json discord-irc
+```
+
+Note that the path to the config file on the host (`/path/to/config`) _must_ be a valid absolute path to a config file.
+Otherwise, you may get the error "illegal operation on a directory".
 
 ## Configuration
 First you need to create a Discord bot user, which you can do by following the instructions [here](https://github.com/reactiflux/discord-irc/wiki/Creating-a-discord-bot-&-getting-a-token).
@@ -69,26 +88,35 @@ First you need to create a Discord bot user, which you can do by following the i
     },
     "ircOptions": { // Optional node-irc options
       "floodProtection": false, // On by default
-      "floodProtectionDelay": 1000 // 500 by default
+      "floodProtectionDelay": 1000, // 500 by default
+      "port": "6697", // 6697 by default
+      "secure": true, // enable SSL, false by default
+      "sasl": true, // false by default
+      "username": "test", // nodeirc by default
+      "password": "p455w0rd" // empty by default
     },
     "format": { // Optional custom formatting options
       // Patterns, represented by {$patternName}, are replaced when sending messages
       "commandPrelude": "Command sent by {$nickname}", // Message sent before a command
       "ircText": "<{$displayUsername}> {$text}", // When sending a message to IRC
       "urlAttachment": "<{$displayUsername}> {$attachmentURL}", // When sending a Discord attachment to IRC
-      "discord": "**<{$author}>** {$withMentions}" // When sending a message to Discord
+      "discord": "**<{$author}>** {$withMentions}", // When sending a message to Discord
       // Other patterns that can be used:
       // {$discordChannel} (e.g. #general)
       // {$ircChannel} (e.g. #irc)
+      "webhookAvatarURL": "https://robohash.org/{$nickname}" // Default avatar to use for webhook messages
     },
     "ircNickColor": false, // Gives usernames a color in IRC for better readability (on by default)
+    "ircNickColors": ['light_blue', 'dark_blue', 'light_red', 'dark_red', 'light_green', 'dark_green', 'magenta', 'light_magenta', 'orange', 'yellow', 'cyan', 'light_cyan'], // Which irc-upd colors to use
+    "parallelPingFix": true, // Prevents users of both IRC and Discord from being mentioned in IRC when they speak in Discord (off by default)
     // Makes the bot hide the username prefix for messages that start
     // with one of these characters (commands):
     "commandCharacters": ["!", "."],
     "ircStatusNotices": true, // Enables notifications in Discord when people join/part in the relevant IRC channel
     "ignoreUsers": {
       "irc": ["irc_nick1", "irc_nick2"], // Ignore specified IRC nicks and do not send their messages to Discord.
-      "discord": ["discord_nick1", "discord_nick2"] // Ignore specified Discord nicks and do not send their messages to IRC.
+      "discord": ["discord_nick1", "discord_nick2"], // Ignore specified Discord nicks and do not send their messages to IRC.
+      "discordIds": ["198528216523210752"] // Ignore specified Discord ids and do not send their messages to IRC.
     },
     // List of webhooks per channel
     "webhooks": {
